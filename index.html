@@ -103,18 +103,19 @@
   h2 { font-family: var(--display); font-weight: 800; font-size: 1.3rem; margin: 0 0 18px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
   .card {
-    border-radius: var(--radius); border: 1px solid var(--border);
-    background: var(--surface); cursor: pointer; padding: 20px; text-align: center;
-  }
-  .card .demo {
-    width: 80px; height: 60px; margin: 0 auto 18px;
-    background: #ffffff; border-radius: 8px;
-  }
-  .card .name { font-size: 0.88rem; font-weight: 600; color: #1c1a20; }
-  .card .hint { font-size: 0.75rem; color: #78727f; margin-top: 4px; font-family: monospace; }
-  .card.copied .hint { color: var(--accent-dim); }
-  .card.copied .hint::after { content: "copied"; }
-  .card:not(.copied) .hint::after { content: "click to copy"; }
+  border-radius: var(--radius); border: 1px solid var(--border);
+  background: #f4f3f6; cursor: pointer; padding: 20px; text-align: center;
+}
+.card .demo {
+  width: 80px; height: 60px; margin: 0 auto 18px;
+  background: #ffffff; border-radius: 8px;
+}
+.card .name { font-size: 0.88rem; font-weight: 600; color: #1c1a20; }
+.card .hint { font-size: 0.75rem; color: #78727f; margin-top: 4px; font-family: monospace; }
+.card.copied .hint { color: var(--accent-dim); }
+.card.copied .hint::after { content: "copied"; }
+.card:not(.copied) .hint::after { content: "click to copy"; }
+
 
   .faq { margin-top: 56px; max-width: 68ch; }
   .faq details { border-bottom: 1px solid var(--border); padding: 16px 0; }
