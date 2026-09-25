@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS Box Shadow Generator — free, copy-paste | Cylvox</title>
+<meta name="description" content="A free CSS box-shadow generator with live preview, plus a library of preset shadows. Click to copy the CSS.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #121114; --surface: #1c1a20; --surface-raised: #232028;
+    --border: #2c2933; --text: #f2f0f5; --text-muted: #938da1;
+    --accent: #8b5cf6; --accent-dim: #6d4fd1; --radius: 10px;
+    --display: 'Manrope', sans-serif; --sans: 'Inter', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.55; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  header.site { border-bottom: 1px solid var(--border); padding: 20px 0; }
+  header.site .wrap { display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: var(--display); font-weight: 800; font-size: 1.05rem; color: var(--text); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; margin-left: 22px; }
+  nav a:hover { color: var(--text); }
+
+  main { padding: 52px 0 80px; }
+  h1 { font-family: var(--display); font-weight: 800; font-size: 2rem; letter-spacing: -0.02em; margin: 0 0 10px; max-width: 22ch; }
+  p.lede { color: var(--text-muted); max-width: 56ch; margin: 0 0 36px; font-size: 1.02rem; }
+
+  .generator {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+  @media (max-width: 760px) { .generator { grid-template-columns: 1fr; } }
+
+  .controls {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: flex; justify-content: space-between;
+    font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;
+  }
+  .field label .val { font-family: monospace; color: var(--text); }
+  .field input[type="range"] { width: 100%; accent-color: var(--accent); }
+  .field input[type="color"] {
+    width: 100%; height: 36px; border: 1px solid var(--border);
+    border-radius: 6px; background: none; padding: 2px; cursor: pointer;
+  }
+  .field.checkbox { display: flex; align-items: center; gap: 8px; }
+  .field.checkbox label { margin: 0; color: var(--text); font-size: 0.9rem; }
+
+  .preview-area {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+  }
+  .preview-stage {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px;
+    min-height: 240px;
+  }
+  .preview-box {
+    width: 160px; height: 120px;
+    background: var(--surface-raised);
+    border-radius: 12px;
+  }
+  .css-output {
+    border-top: 1px solid var(--border);
+    padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .css-output code {
+    font-family: monospace; font-size: 0.85rem; color: var(--text-muted);
+    overflow-x: auto; white-space: nowrap; flex: 1;
+  }
+  .btn {
+    background: var(--accent); color: #121114; border: none;
+    padding: 9px 16px; border-radius: 8px; font-weight: 600;
+    font-size: 0.85rem; cursor: pointer; font-family: var(--sans);
+    flex-shrink: 0;
+  }
+  .btn:hover { background: #9c70ff; }
+  .btn.copied { background: #3ddc97; }
+
+  h2 { font-family: var(--display); font-weight: 800; font-size: 1.3rem; margin: 0 0 18px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .card {
+    border-radius: var(--radius); border: 1px solid var(--border);
+    background: var(--surface); cursor: pointer; padding: 20px; text-align: center;
+  }
+  .card .demo {
+    width: 80px; height: 60px; margin: 0 auto 18px;
+    background: var(--surface-raised); border-radius: 8px;
+  }
+  .card .name { font-size: 0.88rem; font-weight: 600; }
+  .card .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; font-family: monospace; }
+  .card.copied .hint { color: var(--accent); }
+  .card.copied .hint::after { content: "copied"; }
+  .card:not(.copied) .hint::after { content: "click to copy"; }
+
+  .faq { margin-top: 56px; max-width: 68ch; }
+  .faq details { border-bottom: 1px solid var(--border); padding: 16px 0; }
+  .faq summary { cursor: pointer; font-weight: 600; }
+  .faq p { color: var(--text-muted); margin: 10px 0 0; }
+
+  footer.site { border-top: 1px solid var(--border); padding: 26px 0; color: var(--text-muted); font-size: 0.85rem; }
+  footer.site a { color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="https://cylvox.com">cylvox<span>.</span></a>
+    <nav>
+      <a href="https://cylvox.com">Home</a>
+      <a href="https://gradients.cylvox.com">Gradients</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <h1>CSS box-shadow generator</h1>
+    <p class="lede">Drag the sliders, watch the preview, copy the CSS. No sign-up.</p>
+
+    <div class="generator">
+      <div class="controls">
+        <div class="field">
+          <label>Offset X <span class="val" id="v-x">8px</span></label>
+          <input type="range" id="x" min="-60" max="60" value="8">
+        </div>
+        <div class="field">
+          <label>Offset Y <span class="val" id="v-y">8px</span></label>
+          <input type="range" id="y" min="-60" max="60" value="8">
+        </div>
+        <div class="field">
+          <label>Blur <span class="val" id="v-blur">24px</span></label>
+          <input type="range" id="blur" min="0" max="100" value="24">
+        </div>
+        <div class="field">
+          <label>Spread <span class="val" id="v-spread">0px</span></label>
+          <input type="range" id="spread" min="-40" max="40" value="0">
+        </div>
+        <div class="field">
+          <label>Opacity <span class="val" id="v-opacity">0.35</span></label>
+          <input type="range" id="opacity" min="0" max="100" value="35">
+        </div>
+        <div class="field">
+          <label>Color</label>
+          <input type="color" id="color" value="#000000">
+        </div>
+        <div class="field checkbox">
+          <input type="checkbox" id="inset">
+          <label for="inset">Inset (inner shadow)</label>
+        </div>
+      </div>
+
+      <div class="preview-area">
+        <div class="preview-stage">
+          <div class="preview-box" id="previewBox"></div>
+        </div>
+        <div class="css-output">
+          <code id="cssText">box-shadow: 8px 8px 24px 0px rgba(0,0,0,0.35);</code>
+          <button class="btn" id="copyBtn">Copy CSS</button>
+        </div>
+      </div>
+    </div>
+
+    <h2>Preset library</h2>
+    <div class="grid" id="presetGrid"></div>
+
+    <div class="faq">
+      <details>
+        <summary>How do I use the generated CSS?</summary>
+        <p>Copy the output and paste it as the <code>box-shadow</code> property on any element in your stylesheet.</p>
+      </details>
+      <details>
+        <summary>Can I stack multiple shadows?</summary>
+        <p>This generator outputs a single shadow layer. To stack shadows, generate each one separately and combine them with a comma in your CSS: <code>box-shadow: shadow1, shadow2;</code></p>
+      </details>
+      <details>
+        <summary>What's the difference between blur and spread?</summary>
+        <p>Blur softens the shadow's edges — higher values fade out further. Spread expands or shrinks the shadow's size before blurring is applied, independent of the element's own size.</p>
+      </details>
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">Built by <a href="https://cylvox.com">Cylvox</a> — web development &amp; technical SEO.</div>
+</footer>
+
+<script>
+  const inputs = ['x','y','blur','spread','opacity','color'].reduce((acc, id) => {
+    acc[id] = document.getElementById(id); return acc;
+  }, {});
+  const insetInput = document.getElementById('inset');
+  const previewBox = document.getElementById('previewBox');
+  const cssText = document.getElementById('cssText');
+  const copyBtn = document.getElementById('copyBtn');
+
+  function hexToRgb(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+
+  function update() {
+    const x = inputs.x.value, y = inputs.y.value, blur = inputs.blur.value, spread = inputs.spread.value;
+    const opacity = (inputs.opacity.value / 100).toFixed(2);
+    const [r, g, b] = hexToRgb(inputs.color.value);
+    const inset = insetInput.checked ? 'inset ' : '';
+
+    document.getElementById('v-x').textContent = x + 'px';
+    document.getElementById('v-y').textContent = y + 'px';
+    document.getElementById('v-blur').textContent = blur + 'px';
+    document.getElementById('v-spread').textContent = spread + 'px';
+    document.getElementById('v-opacity').textContent = opacity;
+
+    const value = `${inset}${x}px ${y}px ${blur}px ${spread}px rgba(${r}, ${g}, ${b}, ${opacity})`;
+    previewBox.style.boxShadow = value;
+    cssText.textContent = `box-shadow: ${value};`;
+  }
+
+  Object.values(inputs).forEach(el => el.addEventListener('input', update));
+  insetInput.addEventListener('change', update);
+  update();
+
+  copyBtn.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(cssText.textContent); }
+    catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = cssText.textContent; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    copyBtn.textContent = 'Copied';
+    copyBtn.classList.add('copied');
+    setTimeout(() => { copyBtn.textContent = 'Copy CSS'; copyBtn.classList.remove('copied'); }, 1400);
+  });
+
+  const presets = [
+    { name: "Soft Lift", css: "0px 4px 12px 0px rgba(0,0,0,0.15)" },
+    { name: "Card Rest", css: "0px 2px 6px 0px rgba(0,0,0,0.10)" },
+    { name: "Hover Float", css: "0px 12px 28px 0px rgba(0,0,0,0.22)" },
+    { name: "Deep Drop", css: "0px 24px 48px 0px rgba(0,0,0,0.30)" },
+    { name: "Tight Focus", css: "0px 0px 0px 3px rgba(139,92,246,0.45)" },
+    { name: "Violet Glow", css: "0px 8px 24px 0px rgba(139,92,246,0.35)" },
+    { name: "Sharp Edge", css: "4px 4px 0px 0px rgba(0,0,0,0.85)" },
+    { name: "Inner Groove", css: "inset 0px 2px 4px 0px rgba(0,0,0,0.25)" },
+    { name: "Paper Stack", css: "0px 1px 2px rgba(0,0,0,0.24), 0px 4px 12px rgba(0,0,0,0.12)" },
+    { name: "Long Shadow", css: "40px 40px 0px 0px rgba(0,0,0,0.06)" },
+    { name: "Neumorph Out", css: "8px 8px 16px rgba(0,0,0,0.35), -8px -8px 16px rgba(255,255,255,0.03)" },
+    { name: "Warm Halo", css: "0px 8px 30px 0px rgba(217,119,87,0.35)" },
+  ];
+
+  const grid = document.getElementById('presetGrid');
+  grid.innerHTML = presets.map(p =>
+    `<div class="card" data-css="box-shadow: ${p.css};">
+       <div class="demo" style="box-shadow: ${p.css}"></div>
+       <div class="name">${p.name}</div>
+       <div class="hint"></div>
+     </div>`
+  ).join('');
+  grid.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', async () => {
+      const css = card.dataset.css;
+      try { await navigator.clipboard.writeText(css); }
+      catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = css; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); ta.remove();
+      }
+      card.classList.add('copied');
+      setTimeout(() => card.classList.remove('copied'), 1400);
+    });
+  });
+</script>
+
+</body>
+</html>
